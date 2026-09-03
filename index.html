@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vivid Canvas - Art Station</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Poppins:wght@300;400;500;600&family=Sacramento&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #0f0c1b;
+            --card-bg: #1a162b;
+            --accent-pink: #ff75a0;
+            --accent-purple: #b185db;
+            --accent-gradient: linear-gradient(135deg, #ff75a0, #b185db);
+            --text-color: #f3f0f7;
+            --text-muted: #a29bfe;
+            --border-color: rgba(255, 117, 160, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 117, 160, 0.08) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(177, 133, 219, 0.08) 0%, transparent 20%);
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px 20px 20px;
+        }
+
+        .site-title {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 2.8rem;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            text-shadow: 0 0 20px rgba(255, 117, 160, 0.3);
+        }
+
+        .sub-title {
+            font-family: 'Sacramento', cursive;
+            font-size: 2rem;
+            color: var(--accent-pink);
+            margin-bottom: 25px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .nav-btn {
+            background: rgba(26, 22, 43, 0.8);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 12px 28px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: var(--accent-gradient);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 0 20px rgba(255, 117, 160, 0.4);
+            transform: translateY(-2px);
+        }
+
+        main {
+            flex: 1;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 20px 40px 20px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Gallery Styles */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .art-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .art-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 117, 160, 0.2);
+            border-color: var(--accent-pink);
+        }
+
+        .art-card img {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .art-info {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .art-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 5px;
+        }
+
+        .art-tag {
+            font-size: 0.8rem;
+            color: var(--accent-purple);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* NSFW Warning Card */
+        .nsfw-warning-box {
+            background: var(--card-bg);
+            border: 1px solid var(--accent-pink);
+            border-radius: 20px;
+            padding: 40px 20px;
+            text-align: center;
+            max-width: 500px;
+            margin: 40px auto;
+            box-shadow: 0 0 30px rgba(255, 117, 160, 0.2);
+        }
+
+        .nsfw-warning-box i {
+            font-size: 3.5rem;
+            color: var(--accent-pink);
+            margin-bottom: 15px;
+        }
+
+        .nsfw-warning-box h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .nsfw-warning-box p {
+            color: var(--text-muted);
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+
+        .confirm-btn {
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .confirm-btn:hover {
+            box-shadow: 0 0 20px rgba(255, 117, 160, 0.6);
+            transform: scale(1.05);
+        }
+
+        /* About Us Section */
+        .about-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid var(--border-color);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .about-card h2 {
+            font-family: 'Cinzel Decorative', cursive;
+            color: var(--accent-pink);
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        .about-card p {
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(15, 12, 27, 0.95);
+            border-top: 1px solid var(--border-color);
+            padding: 25px;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 15px;
+        }
+
+        .social-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--accent-pink);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background: var(--accent-gradient);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 117, 160, 0.4);
+        }
+
+        .copyright {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 class="site-title">Art Station</h1>
+        <div class="sub-title">Vivid Canvas</div>
+        
+        <nav>
+            <button class="nav-btn active" onclick="openTab('sfw')">SFW Gallery</button>
+            <button class="nav-btn" onclick="openTab('nsfw')">NSFW Gallery</button>
+            <button class="nav-btn" onclick="openTab('about')">About Us</button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- SFW Gallery -->
+        <div id="sfw" class="tab-content active">
+            <div class="gallery-grid">
+                <!-- Example Artwork Cards (Apni Images se Replace Karein) -->
+                <div class="art-card">
+                    <img src="https://picsum.photos/400/500?random=1" alt="Anime Character 2D">
+                    <div class="art-info">
+                        <div class="art-title">Celestial Girl</div>
+                        <div class="art-tag">2D Anime Art</div>
+                    </div>
+                </div>
+                <div class="art-card">
+                    <img src="https://picsum.photos/400/500?random=2" alt="3D Model Render">
+                    <div class="art-info">
+                        <div class="art-title">Cyber Samurai</div>
+                        <div class="art-tag">3D Character</div>
+                    </div>
+                </div>
+                <div class="art-card">
+                    <img src="https://picsum.photos/400/500?random=3" alt="Full Anime Concept">
+                    <div class="art-info">
+                        <div class="art-title">Sakura Dreamer</div>
+                        <div class="art-tag">Digital Concept</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NSFW Gallery -->
+        <div id="nsfw" class="tab-content">
+            <!-- Warning Box -->
+            <div id="nsfw-warning" class="nsfw-warning-box">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <h2>Age Verification Needed</h2>
+                <p>Is section mein mature / adult content shamil ho sakta hai. Kya aapki umar 18 saal ya us se zyada hai?</p>
+                <button class="confirm-btn" onclick="confirmAge()">I am 18+ (Confirm)</button>
+            </div>
+
+            <!-- Content Grid (Initially Hidden) -->
+            <div id="nsfw-gallery-grid" class="gallery-grid" style="display: none;">
+                <div class="art-card">
+                    <img src="https://picsum.photos/400/500?random=4" alt="NSFW Art 1">
+                    <div class="art-info">
+                        <div class="art-title">Shadow Romance</div>
+                        <div class="art-tag">NSFW Digital Art</div>
+                    </div>
+                </div>
+                <div class="art-card">
+                    <img src="https://picsum.photos/400/500?random=5" alt="NSFW Art 2">
+                    <div class="art-info">
+                        <div class="art-title">Midnight Fantasy</div>
+                        <div class="art-tag">Mature Anime Art</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Us -->
+        <div id="about" class="tab-content">
+            <div class="about-card">
+                <h2>About Vivid Canvas</h2>
+                <p>Welcome to <strong>Vivid Canvas - Art Station</strong>! Humari yeh website digital artwork ka ek creative space hai jahan 2D Anime Characters, 3D Character Renders, aur custom digital illustrations showcase kiye jatay hain.</p>
+                <p>Hum har artwork ko bohot dil, aesthetic detail, aur soft colors ke sath design kartay hain. Yahan aapko high-quality artwork aur anime portraits ka collection milega.</p>
+                <p>Aap humse contact karke custom artwork ya commissions ke baare mein bhi baat kar sakte hain. Thank you for visiting!</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="social-icons">
+            <a href="https://instagram.com" target="_blank" class="social-icon" title="Instagram">
+                <i class="fa-brands fa-instagram"></i>
+            </a>
+            <a href="https://wa.me/YOUR_NUMBER" target="_blank" class="social-icon" title="Live Chat">
+                <i class="fa-solid fa-comments"></i>
+            </a>
+            <a href="mailto:your-email@example.com" class="social-icon" title="Email Us">
+                <i class="fa-solid fa-envelope"></i>
+            </a>
+        </div>
+        <div class="copyright">
+            © 2026 Vivid Canvas - Art Station. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        let ageVerified = false;
+
+        function openTab(tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+
+            // Deactivate all buttons
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Show current tab & activate button
+            document.getElementById(tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        function confirmAge() {
+            ageVerified = true;
+            document.getElementById('nsfw-warning').style.display = 'none';
+            document.getElementById('nsfw-gallery-grid').style.display = 'grid';
+        }
+    </script>
+</body>
+</html>
